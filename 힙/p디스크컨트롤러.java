@@ -17,13 +17,13 @@ class Solution {
             return a[0] - b[0];
         });
         
+        // 실행되어야 할(대기 중인) 작업: waitQueue
         Queue<Node> waitQueue = new LinkedList<>();
         for(int i = 0; i < jobs.length; i++){
             waitQueue.offer(new Node(jobs[i][0], jobs[i][1]));
         }
         
-        
-        // 들어간 다음부터는 적게 걸린 순서대로 정렬 SJF
+        // 들어간 다음부터는 적게 걸린 순서대로 정렬: SJF
         PriorityQueue<Node> taskQueue = new PriorityQueue<>((a, b)->{
             return a.time - b.time;
         });
@@ -36,10 +36,13 @@ class Solution {
             // 작업을 해줄 내용이 있다면 작업 진행
             if(!taskQueue.isEmpty()){
                 Node temp = taskQueue.poll();
+                // current - temp.start: 대기 시간이다.!
+                // temp.time: 걸린 시간
                 total += current-temp.start + temp.time;
                 current += temp.time;
             }
             
+            // 끝나는 시간보다 먼저 시작하는 작업이 있다면
             // 작업을 waitQ -> TaskQ 로 이동
             while(!waitQueue.isEmpty() && waitQueue.peek().start <= current){
                 taskQueue.offer(waitQueue.poll());
