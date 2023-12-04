@@ -2,7 +2,7 @@ import java.util.*;
 
 class Solution{
     static final int cellSize = 50;
-    static final int boardSize = cellSize * cellSize;
+    static final int boardSize = (cellSize+1) * (cellSize+1);
     static final String empty = "EMPTY";
     
     static int[] rank;
@@ -20,6 +20,7 @@ class Solution{
         }
     }
     
+    // r행의 c열 위치
     static int find(int r, int c){
         return find(cellSize*r+c);
     }
@@ -33,39 +34,38 @@ class Solution{
     }
     
     static void union(int a, int b){
-        int pa = find(a);
-        int pb = find(b);
+        int pa = find(a); // a의 부모
+        int pb = find(b); // b의 부모
         
         if(pa == pb){
             return;
         }
         if(rank[pa] < rank[pb]){
-            parent[pa] = pb;
+            parent[pa] = pb; // pa의 부모는 pb
             if(board[pa] != null){
                 board[pb] = board[pa];
-                board[pa] = null;
             }
         }else{
-            parent[pb] = pa;
+            parent[pb] = pa; // pb의 부모는 pa
             if(rank[pa] == rank[pb]){
                 rank[pa]++;
             }
             if(board[pa] == null){
                 board[pa] = board[pb];
-                board[pb] = null;
             }
         }
     }
     
     static void dismiss(int a){
+        // 부모 미리 찾아두기
         for(int i = 0; i < boardSize; i++){
             find(i);
         }
         int x = find(a);
         String temp = board[x];
         for(int i = 0; i < boardSize; i++){
-            int y = find(i);
-            if(x == y){
+            int y = parent[i];
+            if(x == y){ // 부모가 같다면
                 rank[i] = 0;
                 parent[i] = i;
                 board[i] = null;
