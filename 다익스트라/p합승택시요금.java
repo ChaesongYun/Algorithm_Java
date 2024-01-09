@@ -18,10 +18,11 @@ class Solution{
         
         // 시작점에서 각 지점까지 가장 짧은 거리를 계산
         int[] together = dijkstra(s-1);
-        int minCost = Integer.MAX_VALUE;
+        int minCost = together[a-1] + together[b-1];
         for(int i = 0; i < N; i++){
             // i 지점까지 같이 가고 i -> a, i -> b 값 계산해서
             // (s -> i -> a) + (s -> i -> b) 값 중 최소값 계산
+            // 같이 가는 일 없이 따로 가게 되는 경우는 i가 s일 때 계산됨
             int[] alone = dijkstra(i);
             int cost = together[i] + alone[a-1] + alone[b-1];
             minCost = Math.min(minCost, cost);
